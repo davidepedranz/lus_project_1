@@ -20,10 +20,11 @@ function column_to_lines() {
 # read the meta-parameters for the model
 ngram_order=$1				# ngram order for the concepts' model
 ngram_method=$2				# method for the discouning for the concepts' model
-ngram_pruning_theta=$3		# theta parameter to use for ngramshrink
+ngram_backoff=$3			# true for backoff, false for mixture
+ngram_pruning_theta=$4		# theta parameter to use for ngramshrink
 
 # decide what feature to use for the training
-case $4 in
+case $5 in
 	"word")
 		o=1
 		;;
@@ -40,7 +41,7 @@ case $4 in
 esac
 
 # decide which column to use for the O concepts
-case $5 in
+case $6 in
 	"word")
 		f=5
 		;;
@@ -60,7 +61,7 @@ esac
 this=$(dirname $0)
 base="$this/.."
 data_raw="${base}/data_raw"
-path="${base}/computations/v2-${ngram_order}-${ngram_method}-${ngram_pruning_theta}-$4-$5"
+path="${base}/computations/v2-${ngram_order}-${ngram_method}-${ngram_backoff}-${ngram_pruning_theta}-$5-$6"
 data="${path}/data"
 lexicon="${path}/lexicon"
 lm="${path}/lm"
@@ -154,7 +155,7 @@ farcompilestrings --symbols=$path/lexicon/concept.lex --unknown_symbol='<unk>' -
 
 # n-grams model
 ngramcount --order=$ngram_order $lm/concepts.far > $lm/concepts.counts
-ngrammake --method=$ngram_method $lm/concepts.counts > $lm/concepts.lm.nopruned
+ngrammake --method=$ngram_method --backoff=$ngram_backoff $lm/concepts.counts > $lm/concepts.lm.nopruned
 
 # pruning
 ngramshrink --method=relative_entropy --theta=$ngram_pruning_theta $lm/concepts.lm.nopruned > $lm/concepts.lm
