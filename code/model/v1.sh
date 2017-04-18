@@ -22,11 +22,28 @@ ngram_order=$1				# ngram order for the concepts' model
 ngram_method=$2				# method for the discouning for the concepts' model
 ngram_pruning_theta=$3		# theta parameter to use for ngramshrink
 
+# decide what feature to use for the training
+case $4 in
+	"word")
+		o=1
+		;;
+	"pos")
+		o=2
+		;;
+	"radix")
+		o=3
+		;;
+	*)
+		echo "ERROR: feature not found. Please use 'word', 'pos' or 'radix'"
+		exit 1
+		;;
+esac
+
 # compute useful dictories where to put the various parts of the model
 this=$(dirname $0)
 base="$this/.."
 data_raw="${base}/data_raw"
-path="${base}/computations/v1-${ngram_order}-${ngram_method}-${ngram_pruning_theta}"
+path="${base}/computations/v1-${ngram_order}-${ngram_method}-${ngram_pruning_theta}-$4"
 data="${path}/data"
 lexicon="${path}/lexicon"
 lm="${path}/lm"
@@ -65,7 +82,7 @@ done
 #---------------------------------------------------------
 # 2) create the lexicons
 #---------------------------------------------------------
-cut -f 1 $data/train.txt | ngramsymbols - > $lexicon/feature.lex 			# input feature
+cut -f $o $data/train.txt | ngramsymbols - > $lexicon/feature.lex 		# input feature
 cut -f 4 $data/train.txt | ngramsymbols - > $lexicon/concept.lex 			# concept
 
 
@@ -74,9 +91,9 @@ cut -f 4 $data/train.txt | ngramsymbols - > $lexicon/concept.lex 			# concept
 #---------------------------------------------------------
 
 # compute the counts
-cut -f 1 $data/train.txt | count | awk '{OFS="\t"; print $2,$1}' > $tagger/feature.counts
+cut -f $o $data/train.txt | count | awk '{OFS="\t"; print $2,$1}' > $tagger/feature.counts
 cut -f 4 $data/train.txt | count | awk '{OFS="\t"; print $2,$1}' > $tagger/concept.counts
-cut -f 1,4 $data/train.txt | count | awk '{OFS="\t"; print $2,$3,$1}' > $tagger/feature_concept.counts
+cut -f $o,4 $data/train.txt | count | awk '{OFS="\t"; print $2,$3,$1}' > $tagger/feature_concept.counts
 
 # compute the cost (as negative log of the probability) of the feature given the concept
 while read feature concept count
@@ -134,7 +151,7 @@ fstcompose $tagger/feature2concept.fst $lm/concepts.lm > $path/model.fst
 #---------------------------------------------------------
 
 # tranform the test data into sentences
-cut -f 1 $data/test.txt | column_to_lines > $performances/sentences.txt
+cut -f $o $data/test.txt | column_to_lines > $performances/sentences.txt
 farcompilestrings --symbols=$lexicon/feature.lex --unknown_symbol='<unk>' $performances/sentences.txt > $performances/sentences.far
 
 # compile the sentences to fsa

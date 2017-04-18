@@ -22,16 +22,33 @@ ngram_order=$1				# ngram order for the concepts' model
 ngram_method=$2				# method for the discouning for the concepts' model
 ngram_pruning_theta=$3		# theta parameter to use for ngramshrink
 
-# decide which column to use for the O concepts
+# decide what feature to use for the training
 case $4 in
 	"word")
-		col=5
+		o=1
 		;;
 	"pos")
-		col=6
+		o=2
 		;;
 	"radix")
-		col=7
+		o=3
+		;;
+	*)
+		echo "ERROR: feature not found. Please use 'word', 'pos' or 'radix'"
+		exit 1
+		;;
+esac
+
+# decide which column to use for the O concepts
+case $5 in
+	"word")
+		f=5
+		;;
+	"pos")
+		f=6
+		;;
+	"radix")
+		f=7
 		;;
 	*)
 		echo "ERROR: feature not found. Please use 'word', 'pos' or 'radix'"
@@ -43,7 +60,7 @@ esac
 this=$(dirname $0)
 base="$this/.."
 data_raw="${base}/data_raw"
-path="${base}/computations/v2-${ngram_order}-${ngram_method}-${ngram_pruning_theta}-$4"
+path="${base}/computations/v2-${ngram_order}-${ngram_method}-${ngram_pruning_theta}-$4-$5"
 data="${path}/data"
 lexicon="${path}/lexicon"
 lm="${path}/lm"
@@ -84,8 +101,8 @@ done
 #---------------------------------------------------------
 # 2) create the lexicons
 #---------------------------------------------------------
-cut -f 1 $data/train.txt | ngramsymbols - > $lexicon/feature.lex 			# input feature
-cut -f $col $data/train.txt | ngramsymbols - > $lexicon/concept.lex 		# concept (modified to include the feature if O)
+cut -f $o $data/train.txt | ngramsymbols - > $lexicon/feature.lex 			# input feature
+cut -f $f $data/train.txt | ngramsymbols - > $lexicon/concept.lex 		# concept (modified to include the feature if O)
 cut -f 4 $data/train.txt | ngramsymbols - > $lexicon/concept_iob.lex 		# concept cleaned, IOB notation
 
 
@@ -94,9 +111,9 @@ cut -f 4 $data/train.txt | ngramsymbols - > $lexicon/concept_iob.lex 		# concept
 #---------------------------------------------------------
 
 # compute the counts
-cut -f 1 $data/train.txt | count | awk '{OFS="\t"; print $2,$1}' > $tagger/feature.counts
-cut -f $col $data/train.txt | count | awk '{OFS="\t"; print $2,$1}' > $tagger/concept.counts
-cut -f 1,$col $data/train.txt | count | awk '{OFS="\t"; print $2,$3,$1}' > $tagger/feature_concept.counts
+cut -f $o $data/train.txt | count | awk '{OFS="\t"; print $2,$1}' > $tagger/feature.counts
+cut -f $f $data/train.txt | count | awk '{OFS="\t"; print $2,$1}' > $tagger/concept.counts
+cut -f $o,$f $data/train.txt | count | awk '{OFS="\t"; print $2,$3,$1}' > $tagger/feature_concept.counts
 
 # compute the cost (as negative log of the probability) of the feature given the concept
 while read feature concept count
@@ -132,7 +149,7 @@ fstcompile --isymbols=$lexicon/feature.lex --osymbols=$lexicon/concept.lex $tagg
 #---------------------------------------------------------
 
 # concepts -> far
-cut -f $col $data/train.txt | column_to_lines > $lm/concepts.phrases
+cut -f $f $data/train.txt | column_to_lines > $lm/concepts.phrases
 farcompilestrings --symbols=$path/lexicon/concept.lex --unknown_symbol='<unk>' --keep_symbols=1 $lm/concepts.phrases > $lm/concepts.far
 
 # n-grams model
@@ -150,7 +167,7 @@ ngramshrink --method=relative_entropy --theta=$ngram_pruning_theta $lm/concepts.
 #---------------------------------------------------------
 
 # compute the tranducer from concept_plus_feature to concept_iob
-cut -f $col $data/train.txt | sort | uniq | sed '/^ *$/d' | \
+cut -f $f $data/train.txt | sort | uniq | sed '/^ *$/d' | \
 while read concept
 do
 	# translate O-xxx to O
@@ -175,7 +192,7 @@ fstcompose $tagger/feature2concept.fst $lm/concepts.lm | fstcompose - $normalize
 #---------------------------------------------------------
 
 # tranform the test data into sentences
-cut -f 1 $data/test.txt | column_to_lines > $performances/sentences.txt
+cut -f $o $data/test.txt | column_to_lines > $performances/sentences.txt
 farcompilestrings --symbols=$lexicon/feature.lex --unknown_symbol='<unk>' $performances/sentences.txt > $performances/sentences.far
 
 # compile the sentences to fsa
