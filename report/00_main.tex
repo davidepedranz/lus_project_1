@@ -30,9 +30,6 @@
 \RequirePackage{xstring}
 \RequirePackage{xparse}
 
-
-
-
 % Uncomment this line for the final submission
 \aclfinalcopy
 
@@ -41,6 +38,9 @@
 \acrodef{WFST}{Weighted Finite State Transducer}
 \acrodef{POS}{Part of Speech}
 \acrodef{IOB}{Inside, Outside, Beginning}
+
+% math commands
+\DeclareMathOperator*{\argmax}{arg\!\max}
 
 \title{
   Concept Sequence Tagging for a Movie Domain \\
@@ -65,10 +65,10 @@ In this project, we developed a \ac{WFST} to extract concepts for a movie domain
 
 \input{01_introduction}
 \input{02_dataset}
+\input{03_model}
 
 % scaletta
-% 2 -> dataset, train len, test len, # tags, IOB notation, evaluation script
-% 3 -> modello teorico, vedi slide russo
+% 3 -> modello teorico, vedi slide
 % 4 -> modello 1
 % 5 -> migliormento, modello 2
 % 6 -> conclusioni

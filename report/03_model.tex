@@ -1,0 +1,54 @@
+\section{Model}
+\label{sec:model}
+
+The model computes the sequence of tags $t_1, ..., t_n$ with the highest probability given the observed sequence of words 
+$w_1, ..., w_n$:
+\begin{equation*}
+    t_1, ..., t_n = \argmax_{t_1, ..., t_n} P(t_1^n | w_1^n).
+\end{equation*}
+
+Applying the Bayes' Law, we obtain:
+\begin{equation*}
+    t_1, ..., t_n = \argmax_{t_1, ..., t_n} \frac{P(w_1^n | t_1^n) P(t_1^n)}{P(w_1^n)}.
+\end{equation*}
+
+Since we maximize over $t_1, ..., t_n$, we can drop the denominator and obtain:
+\begin{equation}
+    t_1, ..., t_n = \argmax_{t_1, ..., t_n} P(w_1^n | t_1^n) P(t_1^n).
+\end{equation}
+
+For this model, we assume that the probability of a word only depends on its own tag,
+not on the tags of the other words in sentence.
+Thus, we have that:
+\begin{equation}
+    P(w_1^n | t_1^n) \approx \prod_{i=1}^n P(w_1 | t_1) 
+\end{equation}
+
+Each $P(w_i | t_i)$ can be easily computed from the training data as:
+\begin{equation}
+    P(w_i | t_i) = \frac{C(t_i, w_i)}{C(t_i)},
+\end{equation}
+where $C(t_i, w_i)$ denotes the number of times that word $w_i$ has tag $t_i$ 
+and $C(t_i)$ denotes the number of occurences of  ag $t_i$ in the training set.
+
+The term $P(t_1^n)$ represent the probability of a tag given all its predecessor in the sentence.
+This can be computed, but suffers from sparness problems.
+To compute the term, we introduce a Markov assumption: the probability of a tag in the sentence
+depends only on the last $m$ tags.
+For $m=1$ (bigrams), we have:
+\begin{equation}
+    P(t_1, ..., t_n) = \prod_{i=1}^n P(t_i | t_{i-1}),
+\end{equation}
+where $t_0$ indicates the beginning of the sentence.
+
+Thus, our final model (for $m=1$) can be computed as:
+\begin{equation}
+    t_1^n = \argmax_{t_1, ..., t_n} \prod_{i=1}^n P(w_1 | t_1) \prod_{i=1}^n P(t_i | t_{i-1}).
+\end{equation}
+
+It is possible to compute the model for different values of $m$.
+
+%%% m=0 baseline!
+
+This model can be realized as the compositions of 2 \ac{WFST}:
+a ........
