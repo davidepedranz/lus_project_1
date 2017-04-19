@@ -3,12 +3,47 @@
 \usepackage{times}
 \usepackage{latexsym}
 \usepackage{url}
+\usepackage{acronym}
+
+% use a decent font
+\usepackage[T1]{fontenc}
+
+% TODO: cancellare pacchetti non usati!
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage[binary-units,per-mode=symbol]{siunitx}
+\usepackage{booktabs}
+\usepackage{pifont}
+\usepackage{microtype}
+\usepackage{textcomp}
+\usepackage[american]{babel}
+\usepackage[noabbrev,capitalise]{cleveref}
+\usepackage{xspace}
+\usepackage{hyphenat}
+\usepackage[draft,inline,nomargin,index]{fixme}
+\fxsetup{theme=color}
+\usepackage{grffile}
+\usepackage{xfrac}
+\usepackage{multirow}
+\RequirePackage{xstring}
+\RequirePackage{xparse}
+
+
+
 
 % Uncomment this line for the final submission
 \aclfinalcopy
 
+% list of acronyms
+\acrodef{SLU}{Spoken Language Understanding}
+\acrodef{WFST}{Weighted Finite State Transducer}
+\acrodef{POS}{Part of Speech}
+\acrodef{IOB}{Inside, Outside, Beginning}
+
 \title{
-  A Spoken Language Understanding Module for a Movie Domain \\
+  Concept Sequence Tagging for a Movie Domain \\
   Language Understanding Systems, Mid-Term Project
 } 
 
@@ -22,7 +57,20 @@
 \begin{document}
 \maketitle
 
-\input{01_abstract}
-\input{02_introduction}
+\begin{abstract}
+Concept Sequence Tagging is usually one of the first steps in building a \ac{SLU}.
+The concept extracted can be used to build complex systems, like an automatic flights reservation system.
+In this project, we developed a \ac{WFST} to extract concepts for a movie domain.
+\end{abstract}
+
+\input{01_introduction}
+\input{02_dataset}
+
+% scaletta
+% 2 -> dataset, train len, test len, # tags, IOB notation, evaluation script
+% 3 -> modello teorico, vedi slide russo
+% 4 -> modello 1
+% 5 -> migliormento, modello 2
+% 6 -> conclusioni
 
 \end{document}

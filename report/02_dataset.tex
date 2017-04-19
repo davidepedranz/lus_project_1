@@ -1,0 +1,36 @@
+\section{Data Set}
+\label{sec:dataset}
+
+\begin{table}[t!]
+	\centering
+    \begin{tabular}{ l l l }
+    	\toprule
+    		\multicolumn{1}{l}{concept} & \multicolumn{1}{l}{train} & \multicolumn{1}{c}{test} \\
+    	\midrule
+            \input{table/concepts}
+    	\bottomrule
+	\end{tabular}
+    \caption{Frequency of the concepts in the data set.}
+	\label{tab:frequencies}
+\end{table}
+
+The data set we used is NL-SPARQL, a corpora of sentences from the movie domain.
+For each word in the sentences, the \ac{POS} and the word stem are provided as additional features.
+The aim is to tag the sentences with the concepts, like the actor name or the movie release date.
+
+The corpora is already divided in the train and test subsets.
+The train subset consists of $\input{counts/train.sentences}$ sentences,
+for a total of $\input{counts/train.tokens}$ tokens.
+The test subset consists of $\input{counts/train.sentences}$ sentences,
+for a total of $\input{counts/train.tokens}$ tokens.
+\cref{tab:frequencies} show the distribution of the concepts in the corpora.
+We can notice that some concepts, like \texttt{director.nationality} and \texttt{award.category},
+are very rare in the train set.
+The concept \texttt{movie.type} is present only in the test set, so it is very hard for any model to predict it.
+
+The concepts are reported in the \ac{IOB} format.
+Each concept can spanw on multiple contingent words:
+the \texttt{B-} prefix indicates that the tag is the beginning of a chunk,
+the \texttt{I-} prefix indicates that the tag is inside a chunk.
+A chunk is delimited by either a \texttt{O} or a \texttt{B-} tag.
+The \texttt{O} tag indicates that no concept has been assigned to the given token.
