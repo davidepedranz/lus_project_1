@@ -43,7 +43,18 @@
 ./v1.sh radix 5 witten_bell
 
 # model 2
-./v2.sh word 2 witten_bell
-./v2.sh word 4 witten_bell
-./v2.sh word 5 witten_bell
+./v2.sh word word 1 kneser_ney
+./v2.sh word word 2 kneser_ney
+./v2.sh word word 3 kneser_ney
+./v2.sh word word 4 kneser_ney
+./v2.sh word word 5 kneser_ney
+./v2.sh word word 1 witten_bell
+./v2.sh word word 2 witten_bell
+./v2.sh word word 3 witten_bell
+./v2.sh word word 4 witten_bell
+./v2.sh word word 5 witten_bell
 
+# model 2 - experiments
+./v2.sh word radix 4 witten_bell
+./v2.sh word pos 4 witten_bell
+./v2.sh radix radix 4 witten_bell
