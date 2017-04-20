@@ -17,14 +17,27 @@ function column_to_lines() {
 # 0) prepare the environment
 #---------------------------------------------------------
 
-# read the meta-parameters for the model
-ngram_order=$1				# ngram order for the concepts' model
-ngram_method=$2				# method for the discouning for the concepts' model
-ngram_backoff=$3			# true for backoff, false for mixture
-ngram_pruning_theta=$4		# theta parameter to use for ngramshrink
+# check the input parameters, exit if wrong input
+if [[ ! "$#" == 4 ]]; then 
+    echo "Wrong number of parameters."
+	echo ""
+	echo "Usage: $0 feature feature_O order method"
+	echo ""
+	echo "Model 2: this model is an improvment over model 1, since"
+	echo "it takes in account the feature to compute the language model."
+	echo ""
+	echo "Arguments:"
+	echo "   feature     Feature to use to train the model ('word', 'pos' or 'radix')"
+	echo "   feature_O   Feature to use to improve the language model for O tags"
+	echo "   order       n-gram order to use for the concepts language model"
+	echo "   method      Smoothing method to use for the concepts language model"
+	echo "               ('witten_bell', 'absolute', 'katz', 'kneser_ney', 'presmoothed' or 'unsmoothed')"
+	echo ""
+    exit 1
+fi
 
 # decide what feature to use for the training
-case $5 in
+case $1 in
 	"word")
 		o=1
 		;;
@@ -41,7 +54,7 @@ case $5 in
 esac
 
 # decide which column to use for the O concepts
-case $6 in
+case $2 in
 	"word")
 		f=5
 		;;
@@ -57,11 +70,15 @@ case $6 in
 		;;
 esac
 
+# read the meta-parameters for the model
+ngram_order=$3				# ngram order for the concepts' model
+ngram_method=$4				# method for the discouning for the concepts' model
+
 # compute useful dictories where to put the various parts of the model
 this=$(dirname $0)
 base="$this/.."
 data_raw="${base}/data_raw"
-path="${base}/computations/v2-${ngram_order}-${ngram_method}-${ngram_backoff}-${ngram_pruning_theta}-$5-$6"
+path="${base}/computations/v2-$1-$2-${ngram_order}-${ngram_method}"
 data="${path}/data"
 lexicon="${path}/lexicon"
 lm="${path}/lm"
@@ -155,11 +172,7 @@ farcompilestrings --symbols=$path/lexicon/concept.lex --unknown_symbol='<unk>' -
 
 # n-grams model
 ngramcount --order=$ngram_order $lm/concepts.far > $lm/concepts.counts
-ngrammake --method=$ngram_method --backoff=$ngram_backoff $lm/concepts.counts > $lm/concepts.lm.nopruned
-
-# pruning
-ngramshrink --method=relative_entropy --theta=$ngram_pruning_theta $lm/concepts.lm.nopruned > $lm/concepts.lm
-
+ngrammake --method=$ngram_method $lm/concepts.counts > $lm/concepts.lm
 
 #---------------------------------------------------------
 # 5) translate O-xxx back to O
