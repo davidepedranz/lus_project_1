@@ -27,9 +27,23 @@
 ./v1.sh word 6 kneser_ney
 
 # compare different smoothing methods
-./v1.sh word 4 absolute
-./v1.sh word 4 katz
-./v1.sh word 4 presmoothed
+./v1.sh word 2 absolute
+./v1.sh word 2 katz
+./v1.sh word 2 presmoothed
 ./v1.sh word 5 absolute
 ./v1.sh word 5 katz
 ./v1.sh word 5 presmoothed
+
+# compare different features
+./v1.sh word 2 witten_bell
+./v1.sh pos 2 witten_bell
+./v1.sh radix 2 witten_bell
+./v1.sh word 5 witten_bell
+./v1.sh pos 5 witten_bell
+./v1.sh radix 5 witten_bell
+
+# model 2
+./v2.sh word 2 witten_bell
+./v2.sh word 4 witten_bell
+./v2.sh word 5 witten_bell
+

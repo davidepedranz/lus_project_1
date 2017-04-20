@@ -53,7 +53,7 @@ for f in $computations/*/performances/performances.txt; do
     ngram=$(echo $model | tr '-' '\t' | cut -f 3)
     smoothing=$(echo $model | tr '-' '\t' | cut -f 4)
 
-    for m in $(echo $model | grep v1 | grep word | grep "\-[45]\-"); do
+    for m in $(echo $model | grep v1 | grep word | grep "\-[25]\-"); do
         echo -n $ngram
         echo -n ' '
         echo -n $smoothing
@@ -61,3 +61,45 @@ for f in $computations/*/performances/performances.txt; do
         cat $f | parse
     done
 done | tee >(format > $table/v1-smoothing.tex)
+
+# model v1, features comparison
+echo -e "\n features comparison"
+echo "---------------------------------"
+for f in $computations/*/performances/performances.txt; do
+    model=$(echo $f | parse_model)
+
+    # extract the feature
+    feature=$(echo $model | tr '-' '\t' | cut -f 2)
+    ngram=$(echo $model | tr '-' '\t' | cut -f 3)
+
+    for m in $(echo $model | grep v1 | grep "witten_bell" | grep "\-[25]\-"); do
+        echo -n $feature
+        echo -n ' '
+        echo -n $ngram
+        echo -n ' '
+        cat $f | parse
+    done
+done | tee >(format > $table/v1-features.tex)
+
+# all models
+echo -e "\n model 1"
+echo "---------------------------------"
+for f in $computations/*/performances/performances.txt; do
+    model=$(echo $f | parse_model)
+
+    # extract the ngram order and smoothing
+    feature=$(echo $model | tr '-' '\t' | cut -f 2)
+    ngram=$(echo $model | tr '-' '\t' | cut -f 3)
+    smoothing=$(echo $model | tr '-' '\t' | cut -f 4)
+
+    for m in $(echo $model | grep v1); do
+        echo -n $feature
+        echo -n ' '
+        echo -n $ngram
+        echo -n ' '
+        echo -n $smoothing
+        echo -n ' '
+        cat $f | parse
+    done
+done
+
