@@ -13,4 +13,4 @@ Please checkout the README.md file in the `code` directory for more information.
 
 ## Licence
 The model source code is licences under the MIT license. A copy of the license is available in the [LICENSE](LICENSE) file.
-The LaTeX sources are licenced under the [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/) License.
+The LaTeX sources and the report are licenced under the [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/) License.
