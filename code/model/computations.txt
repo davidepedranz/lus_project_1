@@ -1,0 +1,35 @@
+#
+# This file contains all the computations that are reported in the report.
+# Checkout the README.md file to see how to use this file.
+#
+
+# baseline
+./v1.sh word 1 unsmoothed
+
+# compare different n-gram orders without smoothing
+./v1.sh word 2 unsmoothed
+./v1.sh word 3 unsmoothed
+./v1.sh word 4 unsmoothed
+./v1.sh word 5 unsmoothed
+./v1.sh word 6 unsmoothed
+
+# compare different n-gram orders with smoothing
+./v1.sh word 2 witten_bell
+./v1.sh word 3 witten_bell
+./v1.sh word 4 witten_bell
+./v1.sh word 5 witten_bell
+./v1.sh word 6 witten_bell
+./v1.sh word 7 witten_bell
+./v1.sh word 2 kneser_ney
+./v1.sh word 3 kneser_ney
+./v1.sh word 4 kneser_ney
+./v1.sh word 5 kneser_ney
+./v1.sh word 6 kneser_ney
+
+# compare different smoothing methods
+./v1.sh word 4 absolute
+./v1.sh word 4 katz
+./v1.sh word 4 presmoothed
+./v1.sh word 5 absolute
+./v1.sh word 5 katz
+./v1.sh word 5 presmoothed
