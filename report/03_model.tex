@@ -13,7 +13,7 @@ Applying the Bayes' Law, we obtain:
     t_1, ..., t_n = \argmax_{t_1, ..., t_n} \frac{P(w_1^n | t_1^n) P(t_1^n)}{P(w_1^n)};
 \end{equation*}
 
-since we maximize over $t_1, ..., t_n$, we can drop the denominator:
+since the denominator does not depend on $t_1, ..., t_n$, we can drop it:
 \begin{equation}
     t_1, ..., t_n = \argmax_{t_1, ..., t_n} P(w_1^n | t_1^n) P(t_1^n).
     \label{eq:model_compact}
@@ -41,9 +41,9 @@ depends only on the $m$ previous tags:
     \label{eq:model_second_term}
 \end{equation}
 where $t_0$ denotes the beginning of the sentence.
-A Markov assumption of order $m$ corresponds to a $m+1$ n-gram language model
+A Markov assumption of order $m$ corresponds to a $m+1$ n-gram language model.
 
-Each term $P(t_i | t_{i-1})$ can be computed using maximum likelihood:
+Each term $P(t_i | t_{i-1})$ can be computed using maximum likelihood as follows:
 \begin{equation*}
     P(t_i | t_{i-m}, ..., t_{i-1}) = \frac{C(t_{i-m}, ..., t_{i})}{C(t_{i-m}, ..., t_{i-1})}.
 \end{equation*}

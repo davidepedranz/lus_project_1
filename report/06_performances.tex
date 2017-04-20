@@ -2,9 +2,9 @@
 \label{sec:performances}
 
 \subsection{Baseline}
-We use the first model with a unigram and no smoothing a a baseline to evaluate the performances of the different n-gram orders and smoothing methods.
-The model with these parameters assign to each word the concept with the highest frequency in the training set for the specific word.
-The baseline model reached a F1 of $57.13\%$, as showed in \cref{tab:v1-ngrams}. 
+We use the first model with a unigram underlying language model without smoothing as the baseline to evaluate the performances of the different n-gram orders and smoothing methods.
+The baseline model simply assigns to each word the concept with the highest frequency in the training set for the specific word.
+The model reached a F1 score of $57.13\%$, as showed in the first line of \cref{tab:v1-ngrams}. 
 
 \begin{table}[t!]
 	\centering
@@ -39,13 +39,13 @@ All models with n-gram order greater then $1$ perform significantly better than 
 
 \subsection{Smoothing Methods}
 For both bigrams and 5-grams, the best smoothing method is Witten-Bell, followed by Absolute and Kneser-Ney.
-\cref{tab:v1-smoothing} shows a detailed comparison of all smoothing methods.
+\cref{tab:v1-smoothing} shows a detailed comparison of all smoothing methods for the best n-gram order choices.
 
 \subsection{Features}
 The model can be trained with a different feature rather than the word.
-\cref{tab:v1-features} compares performances of the 5-grams model with Witten-Bell smoothing for different input features.
-The best option is to use the words.
-Words stems have slightly worse performances than words.
+\cref{tab:v1-features} compares performances of the 5-grams model with Witten-Bell smoothing for the different input features: \ac{POS} and word stems.
+The best option is to use just the original words.
+Word stems have slightly worse performances than words.
 \ac{POS} have terrible performances, with a F1 score of only about $20\%$.
 
 \begin{table}
@@ -63,8 +63,8 @@ Words stems have slightly worse performances than words.
 
 \subsection{Improved model}
 The improved model described in \cref{sec:improvements} achieves significantly better performances than the original model, with a F1 score around $82\%$.
-The best meta parameters for the model are 4-ngram language model with Kneser-Ney smoothing, with a F1 value of $82.74\%$.
-Similarly to the original model, the additional feature result in worse performances.
+The best performances are obtained with a 4-gram underlying language model with Kneser-Ney smoothing, with a F1 value of $82.74\%$.
+Similarly to the original model, the additional features obtain worse performances.
 Opposite to the previous case, the best smoothing methods seems to be Kneser-Ney.
 More detailed results are showed in \cref{tab:v2}.
 

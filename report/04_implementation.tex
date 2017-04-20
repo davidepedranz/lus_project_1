@@ -16,13 +16,13 @@ The cost associated to the transitions is computed as the negative logarithm of 
 
 In addition, we must take care of \ac{OOV} words, i.e. words that are never observed in the training data and thus not present in lexicon.
 Since we can not make any assumption about the concepts probability for unknown words, we choose a uniform distribution.
-Thus, we add one extra self transition $\langle unk \rangle \rightarrow t_j$ for each concept $t_j$, with cost:
+Thus, we add one extra self transition $\langle unk \rangle \rightarrow t_j$ for each concept $t_j$ with cost:
 \begin{equation*}
-    cost(\langle unk \rangle \rightarrow t_j) = -ln \Big( \frac{1}{n_{concepts}} \Big),
+    cost(\langle unk \rangle \rightarrow t_j) = -ln \Big( \frac{1}{n_{concepts}} \Big).
 \end{equation*}
-where $\langle unk \rangle$ is a special token used for the \ac{OOV} words.
+$\langle unk \rangle$ is a special token used for the \ac{OOV} words.
 
-The model is implemented with Bash script that computes all counts, costs and transition for the transducer.
+The model is implemented with a Bash script that computes all counts, costs and transition for the transducer.
 The lexicons are computed using \texttt{OpenGrm NGram}.
 The transducer is compiled to the \texttt{FST} format using \texttt{OpenFst}.
 
@@ -33,7 +33,6 @@ It takes as input a sequence of concepts and computes its probability given the 
 A general problem with language models is data sparseness:
 since the language has an underlying structure and the training data is limited, not all tuples $(t_i, ..., t_m)$ are observed.
 As a consequence, most probabilities have value $0$, which makes the probability of most words sequences $0$ as well.
-
 To solve this problem, we introduce smoothing:
 the unseen tuples are assigned a small probability even though the real observed probability is $0$.
 The probability of frequent tuples is slightly reduced to make the joint probability sum up to $1$.
@@ -46,7 +45,7 @@ For instance, for the bigram case, we can compute the smoothed probability as:
     P(t_i | t_{i-1}) = \frac{C(t_{i-1}, t_i) + 1}{C(t_{i-1}) + V},
 \end{equation*}
 where $V$ is the size of the vocabulary of pairs $(t_i | t_{i-1})$.
-\cref{sec:performances} compares the performances of the model with different smoothing methods. 
+\cref{sec:performances} compares the performances of different smoothing methods on our model. 
 
 Opposite to the first term, we do not need to take care of \ac{OOV} words, since the first transducer can produce only concepts in the concepts' lexicon.
 
@@ -58,7 +57,7 @@ The initial state is $0$, the final state is $n$, where $n$ is equal to the leng
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.95\columnwidth]{figures/fsa}
+	\includegraphics[width=0.95\columnwidth]{figures/fsa}
 	\caption{\ac{FSA} for the sentence ``star of thor''.}
 	\label{fig:fsa_sentence}
 \end{figure}
