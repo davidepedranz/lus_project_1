@@ -63,9 +63,10 @@ The initial state is $0$, the final state is $n$, where $n$ is equal to the leng
 	\label{fig:fsa_sentence}
 \end{figure}
 
-
 The most probable sequence of tags can be computed as the shortest path in the \ac{FST} given by the composition:
 \begin{equation*}
     \lambda_{sentence} \circ \lambda_{word2concept} \circ \lambda_{concept\_lm}.
 \end{equation*}
 The shortest path is computed by the \texttt{OpenFst} library using the Viterbi algorithm.
+
+This model is implemented in \texttt{model/v1.sh}.
