@@ -1,2 +1,31 @@
 \section{Performances}
 \label{sec:performances}
+
+In this section, we present the performances of the models presented in \cref{sec:implementation} and \ref{sec:improvements}.
+
+\subsection{Baseline}
+We use the first model with a unigram and no smoothing a a baseline to evaluate the performances of the different n-gram orders and smoothing methods.
+The model with these parameters assign to each word the concept with the highest frequency in the training set for the specific word.
+The baseline model reached a F1 of $57.13\%$, as showed in \cref{tab:v1-ngrams}. 
+
+\begin{table}
+	\centering
+    \begin{tabular}{ l l l l l }
+    	\toprule
+    		n & smoothing & prec. & recall & F1 \\
+    	\midrule
+            \input{table/v1-ngrams}
+    	\bottomrule
+	\end{tabular}
+    \caption{Comparison of the performances of different n-gram orders for model 1.}
+	\label{tab:v1-ngrams}
+\end{table}
+
+\subsection{n-gram Order}
+The model without smoothing has the best performances for bigrams and 5-grams, reaching respectively a F1 of $76.21\%$  and $76.05\%$.
+The smoothing helps to get slightly better performances, but does not change the ranking of the n-gram orders.
+All models with n-gram order greater then $1$ perform significantly better than the baseline, with an increase in the F1 score of about $20\%$.
+
+\subsection{Smoothing Methods}
+
+\subsection{Features}
