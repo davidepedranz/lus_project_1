@@ -3,35 +3,21 @@
 \usepackage{times}
 \usepackage{latexsym}
 \usepackage{url}
+
+% acronyms support
 \usepackage{acronym}
 
-% use a decent font
+% decent fonts
 \usepackage[T1]{fontenc}
-
-% TODO: cancellare pacchetti non usati!
-\usepackage{amsmath}
-\usepackage{graphicx}
-\usepackage{cite}
-\usepackage[caption=false,font=footnotesize]{subfig}
-\usepackage[binary-units,per-mode=symbol]{siunitx}
-\usepackage{booktabs}
 \usepackage{pifont}
 \usepackage{microtype}
-\usepackage{textcomp}
-\usepackage[american]{babel}
-\usepackage[noabbrev,capitalise]{cleveref}
-\usepackage{xspace}
-\usepackage{hyphenat}
-\usepackage[draft,inline,nomargin,index]{fixme}
-\fxsetup{theme=color}
-\usepackage{grffile}
-\usepackage{xfrac}
-\usepackage{multirow}
-\RequirePackage{xstring}
-\RequirePackage{xparse}
 
-% Uncomment this line for the final submission
-\aclfinalcopy
+% nice looking tables and math
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+% cref
+\usepackage[noabbrev,capitalise]{cleveref}
 
 % list of acronyms
 \acrodef{SLU}{Spoken Language Understanding}
@@ -45,6 +31,9 @@
 % math commands
 \DeclareMathOperator*{\argmax}{arg\!\max}
 
+% include name and email
+\aclfinalcopy
+
 \title{
   Concept Sequence Tagging for a Movie Domain \\
   Language Understanding Systems, Mid-Term Project
@@ -55,7 +44,7 @@
   {\tt davide.pedranz@studenti.unitn.it}
 }
 
-\date{21 March 2017}
+\date{20 March 2017}
 
 \begin{document}
 \maketitle
@@ -73,7 +62,5 @@ In this project, we developed a generative model based on \ac{WFST} to extract c
 \input{05_improvements}
 \input{06_performances}
 \input{07_conclusions}
-
-% se metto distribuzione diversa da uniforme per OOV???
 
 \end{document}
