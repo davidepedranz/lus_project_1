@@ -31,13 +31,13 @@ The concept \texttt{movie.type} is present only in the test set, so it is very h
 
 \subsection{IOB notation}
 The concepts are reported in the \ac{IOB} format.
-Each concept can spanw on multiple contingent words:
+Each concept can spawn on multiple contingent words:
 the \texttt{B-} prefix indicates that the tag is the beginning of a chunk,
 the \texttt{I-} prefix indicates that the tag is inside a chunk.
 A chunk is delimited by either a \texttt{O} or a \texttt{B-} tag.
 The \texttt{O} tag indicates that no concept has been assigned to the given token.
 
-\subsection{Evalutation}
+\subsection{Evaluation}
 The performances of the models are evaluated using the \texttt{conlleval.pl}
 script\footnote{\url{http://www.cnts.ua.ac.be/conll2000/chunking/output.html}}.
 The script computes precision, recall and F1 score for each concept and for the whole test set.

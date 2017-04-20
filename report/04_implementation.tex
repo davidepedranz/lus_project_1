@@ -1,0 +1,71 @@
+\section{Implementation}
+\label{sec:implementation}
+
+The model described in \cref{eq:model} can be implemented as a \ac{WFST}.
+In particular, the model can be decomposed in two transducers, one for each term.
+The final model is given by the composition of the two transducer.
+
+\subsection{First term: $\prod_{i=1}^n P(w_i | t_i)$}
+The first transducer $\lambda_{word2concept}$ assigns to each work the tag with the highest probability.
+The transducer has a single state $0$ with many self transitions.
+Each transition corresponds to a word in the lexicon.
+For each unique pair $(w_i, t_j)$, a self transition $w_i \rightarrow t_j$ is put in the transducer.
+The cost associated to the transition is computed as the negative log of the probability of the pair $P(w_i, t_j)$:
+\begin{equation*}
+    cost(w_i \rightarrow t_j) = -ln(P(w_i, t_j)).
+\end{equation*}
+
+In addition to these transitions, we must take care of \ac{OOV} words, i.e. words that are never observed in the training data and thus not present in lexicon.
+Since we can not make any assumption about the concepts for unknown words, we assign them a uniform probability distribution.
+Thus, we one extra self transitions $\langle unk \rangle \rightarrow t_j$ for each concept $t_j$, with cost:
+\begin{equation*}
+    cost(\langle unk \rangle \rightarrow t_j) = -ln \Big( \frac{1}{n_{concepts}} \Big).
+\end{equation*}
+
+The transducer is realized by with a Bash script that computes all counts, costs and transition for the transducer.
+The lexicons are computed using \texttt{OpenGrm NGram}.
+The transducer is compiled to the \texttt{FST} format using \texttt{OpenFst}.
+
+\subsection{Second term: $\prod_{i=1}^n P(t_i | t_{i-1})$}
+The second transducer $\lambda_{concept\_lm}$ is a language model for the concepts.
+It takes as input a sequence of words and computes its probability given its predecessors and the observed training data.
+
+A general problem with language models is the data sparseness.
+In other words, since the language has an underlying structure and the training data is limited, not all tuples $(t_i, ..., t_m)$ are observed.
+As a consequence, most probabilities are $0$, which makes the probability of most words sequences $0$ as well.
+
+To solve this problem, some smoothing must be introduced:
+the unseen tuples are assigned a small probability even though the observed probability is $0$.
+Since the joint probability must sum up to $1$, the probability of frequent tuples is reduced to balance the probability distribution.
+
+There are different smoothing methods.
+A simple technique is the Laplace smoothing:
+we add imaginary training data with all possible n-gram combinations, each of them with frequency $1$.
+For instance, for the bigram case, we can compute the smoothed probability of $(t_i | t_{i-1})$ as:
+\begin{equation*}
+    P(t_i | t_{i-1}) = \frac{C(t_{i-1}, t_i) + 1}{C(t_{i-1}) + V},
+\end{equation*}
+where $V$ is the size of the vocabulary of pairs $(t_i | t_{i-1})$.
+We tried different smoothing methods and compared their performances.
+
+Opposite to the first term, we do not need to take care of \ac{OOV} words, since the first transducer can produce only concepts in the concepts' lexicon: it is not possible to have input concepts not in the lexicon.
+
+\subsection{Concept tagging}
+To compute the most probable sequence of tags, each sentence is first compiled to a linear \ac{FSA} $\lambda_{sentence}$.
+For each word $w_i$, we define a state $i$ and a transition from state $i-1$ to state $i$ that translate word $w_i$ in itself.
+The initial state is $0$, the final state is $n$, where $n$ is equal to the length of the sentence.
+\cref{fig:fsa_sentence} shows an example.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.9\columnwidth]{figures/fsa}
+	\caption{\ac{FSA} for the sentence ``star of thor''.}
+	\label{fig:fsa_sentence}
+\end{figure}
+
+
+The most probable sequence of tags can be computed as the shortest path in the \ac{FST} given by the composition:
+\begin{equation*}
+    \lambda_{sentence} \circ \lambda_{word2concept} \circ \lambda_{concept\_lm}.
+\end{equation*}
+The shortest path is computed by the \texttt{OpenFst} library using the Viterbi algorithm.

@@ -1,12 +1,14 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Concept tagging is usually defined as the extraction of a sequence of concepts out of a given word se- quence.
+Concept tagging is usually defined as the extraction of a sequence of concepts out of a given word sequence.
 A concept represents the smallest unit of meaning that is relevant for a specific task.
 The extracted concepts can be used by the following module in the \ac{SLU} pipeline to provide more complex functions,
-like, for instace, an automatic system for interactive flights reservation or a personal assistant program.
+like, for instance, an automatic system for interactive flights reservation or a personal assistant program.
 
-In this report, we will present a \ac{WFST} generative model to extract concepts for a movie domain build using the OpenFst and OpenGrm NGram libraries.
+In this report, we will present a \ac{WFST} generative model to extract concepts for a movie domain build using
+the \texttt{OpenFst}\footnote{\url{http://www.openfst.org/twiki/bin/view/FST/WebHome}}
+and \texttt{OpenGrm NGram}\footnote{\url{http://www.openfst.org/twiki/bin/view/GRM/NGramLibrary}} libraries.
 We will briefly describe the used data set.
 Then, we will present the model we choose to implement.
 Finally, we will discuss the model implementation and the obtained performances.
