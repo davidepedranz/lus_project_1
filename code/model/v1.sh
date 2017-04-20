@@ -17,13 +17,27 @@ function column_to_lines() {
 # 0) prepare the environment
 #---------------------------------------------------------
 
-# read the meta-parameters for the model
-ngram_order=$1				# ngram order for the concepts' model
-ngram_method=$2				# method for the discouning for the concepts' model
-ngram_pruning_theta=$3		# theta parameter to use for ngramshrink
+# check the input parameters, exit if wrong input
+if [[ ! "$#" == 3 ]]; then 
+    echo "Wrong number of parameters."
+	echo ""
+	echo "Usage: $0 feature order method"
+	echo ""
+	echo "Model 1: the model is given by the composition of two transducer:"
+	echo "The first one computes the most likely concept for a given word,"
+	echo "the second is a n-gram language model for the concepts"
+	echo ""
+	echo "Arguments:"
+	echo "   feature   Feature to use to train the model ('word', 'pos' or 'radix')" 
+	echo "   order     n-gram order to use for the concepts language model"
+	echo "   method    Smoothing method to use for the concepts language model"
+	echo "             ('witten_bell', 'absolute', 'katz', 'kneser_ney', 'presmoothed' or 'unsmoothed')"
+	echo ""
+    exit 1
+fi
 
 # decide what feature to use for the training
-case $4 in
+case $1 in
 	"word")
 		o=1
 		;;
@@ -39,11 +53,15 @@ case $4 in
 		;;
 esac
 
+# read the meta-parameters for the model
+ngram_order=$2				# ngram order for the concepts' model
+ngram_method=$3				# method for the discouning for the concepts' model
+
 # compute useful dictories where to put the various parts of the model
 this=$(dirname $0)
 base="$this/.."
 data_raw="${base}/data_raw"
-path="${base}/computations/v1-${ngram_order}-${ngram_method}-${ngram_pruning_theta}-$4"
+path="${base}/computations/v1-$1-${ngram_order}-${ngram_method}"
 data="${path}/data"
 lexicon="${path}/lexicon"
 lm="${path}/lm"
@@ -83,7 +101,7 @@ done
 # 2) create the lexicons
 #---------------------------------------------------------
 cut -f $o $data/train.txt | ngramsymbols - > $lexicon/feature.lex 		# input feature
-cut -f 4 $data/train.txt | ngramsymbols - > $lexicon/concept.lex 			# concept
+cut -f 4 $data/train.txt | ngramsymbols - > $lexicon/concept.lex 		# concept
 
 
 #---------------------------------------------------------
@@ -134,10 +152,7 @@ farcompilestrings --symbols=$path/lexicon/concept.lex --unknown_symbol='<unk>' -
 
 # n-grams model
 ngramcount --order=$ngram_order $lm/concepts.far > $lm/concepts.counts
-ngrammake --method=$ngram_method $lm/concepts.counts > $lm/concepts.lm.nopruned
-
-# pruning
-ngramshrink --method=relative_entropy --theta=$ngram_pruning_theta $lm/concepts.lm.nopruned > $lm/concepts.lm
+ngrammake --method=$ngram_method $lm/concepts.counts > $lm/concepts.lm
 
 
 #---------------------------------------------------------
