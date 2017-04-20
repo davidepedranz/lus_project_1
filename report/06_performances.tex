@@ -8,7 +8,7 @@ We use the first model with a unigram and no smoothing a a baseline to evaluate 
 The model with these parameters assign to each word the concept with the highest frequency in the training set for the specific word.
 The baseline model reached a F1 of $57.13\%$, as showed in \cref{tab:v1-ngrams}. 
 
-\begin{table}
+\begin{table}[t!]
 	\centering
     \begin{tabular}{ l l l l l }
     	\toprule
@@ -27,5 +27,41 @@ The smoothing helps to get slightly better performances, but does not change the
 All models with n-gram order greater then $1$ perform significantly better than the baseline, with an increase in the F1 score of about $20\%$.
 
 \subsection{Smoothing Methods}
+For both bigrams and 5-grams, the best smoothing method is Witten-Bell, followed by Absolute and Kneser-Ney.
+\cref{tab:v1-smoothing} shows a detailed comparison of all smoothing methods.
+
+\begin{table}[t!]
+	\centering
+    \begin{tabular}{ l l l l l }
+    	\toprule
+    		n & smoothing & prec. & recall & F1 \\
+    	\midrule
+            \input{table/v1-smoothing}
+    	\bottomrule
+	\end{tabular}
+    \caption{Comparison of the performances of different smoothing methods for model 1.}
+	\label{tab:v1-smoothing}
+\end{table}
 
 \subsection{Features}
+The model can be trained with a different feature rather than the word.
+\cref{tab:v1-features} compares performances of the 5-grams model with Witten-Bell smoothing for different input features.
+The best option is to use the words.
+Words stems have slightly worse performances than words.
+\ac{POS} have terrible performances, with a F1 score of only about $20\%$.
+
+\begin{table}
+	\centering
+    \begin{tabular}{ l l l l l }
+    	\toprule
+    		feature & n & prec. & recall & F1 \\
+    	\midrule
+            \input{table/v1-features}
+    	\bottomrule
+	\end{tabular}
+    \caption{Comparison of the performances of different input features for model 1, using Witten-Bell smoothing.}
+	\label{tab:v1-features}
+\end{table}
+
+\subsection{Improved model}
+TODO...
