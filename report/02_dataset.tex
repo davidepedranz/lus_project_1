@@ -10,34 +10,33 @@
             \input{table/concepts}
     	\bottomrule
 	\end{tabular}
-    \caption{Frequency of the concepts in the data set.}
+    \caption{Frequency of the concepts in the corpora.}
 	\label{tab:frequencies}
 \end{table}
 
-The data set we used is NL-SPARQL, a corpora of sentences from the movie domain.
-For each word in the sentences, the \ac{POS} and the word stem are provided as additional features.
-The aim is to tag the sentences with the concepts, like the actor name or the movie release date.
+The data set used is NL-SPARQL, a corpora of sentences from the movie domain.
+For each word, the \ac{POS} and the word stem are provided in addition to the concept tag.
+Example of concepts are the actor name or the movie release date.
+The aim is to train a model to assign the most probable sequence of concepts to each sentence.
 
-\subsection{Corpora}
-The corpora is already divided in the train and test subsets.
-The train subset consists of $\input{counts/train.sentences}$ sentences,
-for a total of $\input{counts/train.tokens}$ tokens.
-The test subset consists of $\input{counts/train.sentences}$ sentences,
-for a total of $\input{counts/train.tokens}$ tokens.
-\cref{tab:frequencies} show the distribution of the concepts in the corpora.
-We can notice that some concepts, like \texttt{director.nationality} and \texttt{award.category},
-are very rare in the train set.
+\subsection{NL-SPARQL Corpora}
+The corpora is already divided in the train and test sets.
+The train set consists of $\input{counts/train.sentences}$ sentences, for a total of $\input{counts/train.tokens}$ tokens.
+The test set is approximately a third of the train one and consists of $\input{counts/test.sentences}$ sentences, for a total of $\input{counts/test.tokens}$ tokens.
+The corpora contains $\input{counts/corpora.concepts}$ different concepts.
+\cref{tab:frequencies} show their frequencies in the train and test sets.
+$9$ concepts, for instance \texttt{director.nationality} and \texttt{award.category}, are very rare in the train set, with a frequency smaller then $10$.
 The concept \texttt{movie.type} is present only in the test set, so it is very hard for any model to predict it.
 
 \subsection{IOB notation}
-The concepts are reported in the \ac{IOB} format.
-Each concept can spawn on multiple contingent words:
-the \texttt{B-} prefix indicates that the tag is the beginning of a chunk,
-the \texttt{I-} prefix indicates that the tag is inside a chunk.
-A chunk is delimited by either a \texttt{O} or a \texttt{B-} tag.
-The \texttt{O} tag indicates that no concept has been assigned to the given token.
+The concept tags follow the \ac{IOB} format.
+Each concept can spawn on multiple contingent words.
+The \texttt{O} tag indicates that the word has not being assigned any concept.
+The \texttt{B-} prefix denotes the beginning of a chunk,
+the \texttt{I-} prefix indicates a chunk continuation.
+Each chunk is delimited by a \texttt{O}, the next \texttt{B-} tag or the end of the sentence.
 
 \subsection{Evaluation}
-The performances of the models are evaluated using the \texttt{conlleval.pl}
-script\footnote{\url{http://www.cnts.ua.ac.be/conll2000/chunking/output.html}}.
-The script computes precision, recall and F1 score for each concept and for the whole test set.
+The performances of the models are evaluated using the \texttt{conlleval.pl}\footnote{\url{http://www.cnts.ua.ac.be/conll2000/chunking/output.html}},
+a Perl script originally developed to measure the performance of \ac{POS} tagging the CoNLL-2000 corpora.
+The script can handle the \ac{IOB} notation and computes precision, recall and F1 score for each concept and the overall performances for the entire test set.

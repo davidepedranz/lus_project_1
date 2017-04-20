@@ -1,0 +1,14 @@
+\section{Language Model Improvement}
+\label{sec:improvements}
+
+The model presented in \cref{sec:implementation} does not exploit the information provided by the words that are tagged as \texttt{O}.
+In fact, all information is lost with the transducer $\lambda_{word2concept}$.
+We can preserve it by including the word itself in the \texttt{O} tag, so that we can build a more accurate language model.
+This idea is implemented in the file \texttt{model/v2.sh}.
+
+Before building the lexicon, the training data is modified to replace the \texttt{O} tags with \texttt{O-word}.
+The lexicon, $\lambda_{word2concept}$ and $\lambda_{concept\_lm}$ are build using the modified version of the training data.
+Finally, a new transducer $\lambda_{concept2iob}$ is added to translate the \texttt{O-word} tags back to \texttt{O}.
+This transducer has a single state $0$, a self transition $\texttt{O-word} \rightarrow \texttt{O}$ for each word in the lexicon and a the self transitions $\texttt{B-concept} \rightarrow \texttt{B}$ and $\texttt{I-concept} \rightarrow \texttt{I}$ for each concept.
+All transition have cost $0$.
+For each possible input, there is only one transition available.

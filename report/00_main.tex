@@ -35,7 +35,7 @@
 
 % list of acronyms
 \acrodef{SLU}{Spoken Language Understanding}
-\acrodef{WFST}{Weighted Finite State Transducer}
+\acrodef{WFST}{Weighted Finite State Transducers}
 \acrodef{POS}{Part of Speech}
 \acrodef{IOB}{Inside, Outside, Beginning}
 \acrodef{OOV}{Out of Vocabulary}
@@ -61,16 +61,17 @@
 \maketitle
 
 \begin{abstract}
-Concept Sequence Tagging is usually one of the first steps in building a \ac{SLU}.
-The concept extracted can be used to build complex systems, like an automatic flights reservation system.
-In this project, we developed a \ac{WFST} to extract concepts for a movie domain.
+Concept Sequence Tagging is usually one of the first building building blocks of a \ac{SLU}.
+The extracted concepts can be used to build more advanced softwares, like a personal vocal assistant or an automatic flights reservation system.
+In this project, we developed a generative model based on \ac{WFST} to extract concepts from sentences taken from the movie domain.
 \end{abstract}
 
 \input{01_introduction}
 \input{02_dataset}
 \input{03_model}
-\input{04_implementation_v1}
-\input{05_implementation_v2}
+\input{04_implementation}
+\input{05_improvements}
+\input{06_performances}
 
 % 6 -> conclusioni
 

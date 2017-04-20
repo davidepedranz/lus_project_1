@@ -13,11 +13,18 @@ function format_latex() {
     cat - | sed 's/ / \& /g' | sed 's/$/ \\\\/' | sed 's/_/\\_/g'
 }
 
+# parse the output of wc -l
+function get_number() {
+    cat - | sed 's/^ *//' | tr -d '\n'
+}
+
 this=$(dirname $0)
 data="$this/../data_raw"
-report="$this/../../report/table"
+table="$this/../../report/table"
+counts="$this/../../report/counts"
 
-mkdir -p $report
+mkdir -p $table
+mkdir -p $counts
 
 # count the concepts in both train and test file
 # join the 2 counts on the concept column, replace missing attributes with 0
@@ -25,4 +32,5 @@ mkdir -p $report
 join -a 1 -a 2 -e'0' -o '0,1.2,2.2' \
     <(cat $data/NLSPARQL.train.data | count) \
     <(cat $data/NLSPARQL.test.data | count) | \
-    tee >(format_latex > $report/concepts.tex)
+    tee >(format_latex > $table/concepts.tex) | \
+    tee >(cat - | wc -l | get_number > $counts/corpora.concepts)
