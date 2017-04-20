@@ -1,8 +1,6 @@
 \section{Performances}
 \label{sec:performances}
 
-In this section, we present the performances of the models presented in \cref{sec:implementation} and \ref{sec:improvements}.
-
 \subsection{Baseline}
 We use the first model with a unigram and no smoothing a a baseline to evaluate the performances of the different n-gram orders and smoothing methods.
 The model with these parameters assign to each word the concept with the highest frequency in the training set for the specific word.
@@ -26,10 +24,6 @@ The model without smoothing has the best performances for bigrams and 5-grams, r
 The smoothing helps to get slightly better performances, but does not change the ranking of the n-gram orders.
 All models with n-gram order greater then $1$ perform significantly better than the baseline, with an increase in the F1 score of about $20\%$.
 
-\subsection{Smoothing Methods}
-For both bigrams and 5-grams, the best smoothing method is Witten-Bell, followed by Absolute and Kneser-Ney.
-\cref{tab:v1-smoothing} shows a detailed comparison of all smoothing methods.
-
 \begin{table}[t!]
 	\centering
     \begin{tabular}{ l l l l l }
@@ -42,6 +36,10 @@ For both bigrams and 5-grams, the best smoothing method is Witten-Bell, followed
     \caption{Comparison of the performances of different smoothing methods for model 1.}
 	\label{tab:v1-smoothing}
 \end{table}
+
+\subsection{Smoothing Methods}
+For both bigrams and 5-grams, the best smoothing method is Witten-Bell, followed by Absolute and Kneser-Ney.
+\cref{tab:v1-smoothing} shows a detailed comparison of all smoothing methods.
 
 \subsection{Features}
 The model can be trained with a different feature rather than the word.
@@ -64,4 +62,21 @@ Words stems have slightly worse performances than words.
 \end{table}
 
 \subsection{Improved model}
-TODO...
+The improved model described in \cref{sec:improvements} achieves significantly better performances than the original model, with a F1 score around $82\%$.
+The best meta parameters for the model are 4-ngram language model with Kneser-Ney smoothing, with a F1 value of $82.74\%$.
+Similarly to the original model, the additional feature result in worse performances.
+Opposite to the previous case, the best smoothing methods seems to be Kneser-Ney.
+More detailed results are showed in \cref{tab:v2}.
+
+\begin{table}
+	\centering
+    \begin{tabular}{ l l l l l }
+    	\toprule
+    		n & smoothing & prec. & recall & F1 \\
+    	\midrule
+            \input{table/v2}
+    	\bottomrule
+	\end{tabular}
+    \caption{Comparison of the performances of different parameters for model 2, using words as input.}
+	\label{tab:v2}
+\end{table}
