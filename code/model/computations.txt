@@ -1,6 +1,5 @@
 #
 # This file contains all the computations that are reported in the report.
-# Checkout the README.md file to see how to use this file.
 #
 
 # baseline
